@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { addNewComment } from "../infrastructure/repositories/commentRepository.js"
+import { addNewComment, getCommentsByPostId } from "../infrastructure/repositories/commentRepository.js"
 import type { Comment } from "../domain/comment.js"
 
 export const addComment = (req: Request, res: Response) => {
@@ -13,4 +13,10 @@ export const addComment = (req: Request, res: Response) => {
   const newComment = addNewComment(comment)
 
   res.json(newComment)
+}
+
+export const getCommentsByPost = (req: Request, res: Response) => {
+  const postId = req.params.postId as string
+  const comments = getCommentsByPostId(postId)
+  res.json(comments)
 }
