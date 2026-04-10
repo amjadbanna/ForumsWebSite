@@ -1,11 +1,6 @@
 import type { User } from "../../domain/user.js"
 
-/**
- * Input Port — defines the authentication operations that the
- * application exposes to the outside world (HTTP controllers, etc).
- * The infrastructure layer calls these methods; it never touches
- * the repository directly.
- */
+/** Input Port — authentication operations exposed to the outside world */
 export interface IAuthUseCases {
   /**
    * Create a new user account with role "user".

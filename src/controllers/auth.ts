@@ -1,25 +1,42 @@
-import { type Request, type Response } from "express"
+import type { Request, Response } from "express"
+import { addUser, findUserByUsernameAndPassword, findUserByUsername } from "../infrastructure/repositories/userRepository.js"
+import { createToken } from "../middleware/jwt.js"
+import type { User } from "../domain/user.js"
 
-let users: any[] = []
+/** POST /auth/register — create a new user account */
+export const register = (req: Request, res: Response): void => {
+  const { username, password } = req.body as { username: string; password: string }
 
-export const register = (req: Request, res: Response) => {
-  const user = {
+  // Check if the username is already taken
+  if (findUserByUsername(username)) {
+    res.status(409).json({ message: "Username is already taken" })
+    return
+  }
+
+  const user: User = {
     id: Date.now().toString(),
-    username: req.body.username,
-    password: req.body.password,
+    username,
+    password, // Hash with bcrypt in production
     role: "user"
   }
 
-  users.push(user)
-  res.json(user)
+  const newUser = addUser(user)
+  const token = createToken({ id: newUser.id, username: newUser.username, role: newUser.role })
+
+  // Never return the password
+  res.status(201).json({ token, user: { id: newUser.id, username: newUser.username, role: newUser.role } })
 }
 
-export const login = (req: Request, res: Response) => {
-  const user = users.find(
-    u => u.username === req.body.username && u.password === req.body.password
-  )
+/** POST /auth/login — validate credentials and return a JWT */
+export const login = (req: Request, res: Response): void => {
+  const { username, password } = req.body as { username: string; password: string }
+  const user = findUserByUsernameAndPassword(username, password)
 
-  if (!user) return res.status(401).json({ message: "Invalid login" })
+  if (!user) {
+    res.status(401).json({ message: "Invalid username or password" })
+    return
+  }
 
-  res.json(user)
+  const token = createToken({ id: user.id, username: user.username, role: user.role })
+  res.json({ token, user: { id: user.id, username: user.username, role: user.role } })
 }

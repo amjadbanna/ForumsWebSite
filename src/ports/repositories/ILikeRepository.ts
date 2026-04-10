@@ -1,9 +1,6 @@
 import type { Like } from "../../domain/like.js"
 
-/**
- * Output Port — defines what the infrastructure layer must provide
- * for like data operations.
- */
+/** Output Port — contract the infrastructure layer must fulfil for like data operations */
 export interface ILikeRepository {
   /** Persist a new like and return it */
   addLike(like: Like): Like

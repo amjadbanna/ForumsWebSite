@@ -20,3 +20,10 @@ body:json {
     "password": "password123"
   }
 }
+
+script:post-response {
+  // Save the returned token so all protected requests can use {{token}}
+  if (res.body.token) {
+    bru.setVar("token", res.body.token);
+  }
+}

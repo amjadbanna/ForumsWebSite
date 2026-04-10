@@ -1,13 +1,16 @@
 import type { Comment } from "../../domain/comment.js"
 
-/**
- * Output Port — defines what the infrastructure layer must provide
- * for comment data operations.
- */
+/** Output Port — contract the infrastructure layer must fulfil for comment data operations */
 export interface ICommentRepository {
   /** Persist a new comment and return it */
   addNewComment(comment: Comment): Comment
 
   /** Return all comments for a given post */
   getCommentsByPostId(postId: string): Comment[]
+
+  /** Update a comment's content; returns undefined if not found */
+  updateComment(id: string, content: string): Comment | undefined
+
+  /** Remove a comment by id (no-op if not found) */
+  removeCommentById(id: string): void
 }

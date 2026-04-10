@@ -1,6 +1,4 @@
-/**
- * Shape of the aggregate stats returned by the admin repository.
- */
+/** Site-wide aggregate statistics */
 export interface SiteStats {
   totalUsers: number
   totalPosts: number
@@ -8,11 +6,21 @@ export interface SiteStats {
   totalLikes: number
 }
 
-/**
- * Output Port — defines what the infrastructure layer must provide
- * for admin/analytics operations.
- */
+/** Per-user activity summary */
+export interface UserAnalytic {
+  id: string
+  username: string
+  role: string
+  postCount: number
+  commentCount: number
+  likeCount: number
+}
+
+/** Output Port — contract the infrastructure layer must fulfil for admin/analytics operations */
 export interface IAdminRepository {
   /** Return aggregate counts across the whole site */
   getSiteStats(): SiteStats
+
+  /** Return an activity summary for every user */
+  getUserAnalytics(): UserAnalytic[]
 }

@@ -1,11 +1,11 @@
 meta {
-  name: Add Comment
+  name: Edit Comment
   type: http
-  seq: 2
+  seq: 3
 }
 
-post {
-  url: {{baseUrl}}/posts/:postId/comments
+put {
+  url: {{baseUrl}}/posts/:postId/comments/:commentId
   body: json
   auth: none
 }
@@ -17,10 +17,11 @@ headers {
 
 params:path {
   postId: REPLACE_WITH_POST_ID
+  commentId: REPLACE_WITH_COMMENT_ID
 }
 
 body:json {
   {
-    "content": "Great post!"
+    "content": "Updated comment content."
   }
 }

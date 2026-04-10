@@ -1,6 +1,7 @@
 export interface Comment {
-  id: string;
-  postId: string;
-  authorId: string;
-  content: string;
+  id: string
+  postId: string
+  authorId: string
+  content: string
+  createdAt: string // ISO timestamp
 }

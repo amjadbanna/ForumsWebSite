@@ -1,11 +1,11 @@
 meta {
-  name: Like Post
+  name: Delete Comment
   type: http
-  seq: 1
+  seq: 4
 }
 
-post {
-  url: {{baseUrl}}/posts/:postId/like
+delete {
+  url: {{baseUrl}}/posts/:postId/comments/:commentId
   body: none
   auth: none
 }
@@ -16,4 +16,5 @@ headers {
 
 params:path {
   postId: REPLACE_WITH_POST_ID
+  commentId: REPLACE_WITH_COMMENT_ID
 }
