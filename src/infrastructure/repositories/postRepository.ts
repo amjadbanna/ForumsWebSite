@@ -1,36 +1,44 @@
 import type { Post } from "../../domain/post.js"
-import { posts } from "../database.js"
+import { PostModel } from "../models/PostModel.js"
 
 /** Persist a new post and return it */
-export const addPost = (post: Post): Post => {
-  posts.push(post)
+export const addPost = async (post: Post): Promise<Post> => {
+  await PostModel.create(post)
   return post
 }
 
 /** Return all posts */
-export const getAllPosts = (): Post[] => posts
+export const getAllPosts = async (): Promise<Post[]> => {
+  const docs = await PostModel.find().select("-_id").lean()
+  return docs as unknown as Post[]
+}
 
 /** Remove a post by id (no-op if not found) */
-export const removePostById = (id: string): void => {
-  const index = posts.findIndex((p) => p.id === id)
-  if (index !== -1) posts.splice(index, 1)
+export const removePostById = async (id: string): Promise<void> => {
+  await PostModel.deleteOne({ id })
 }
 
 /** Find a single post by id, or undefined if not found */
-export const findPostById = (id: string): Post | undefined =>
-  posts.find((p) => p.id === id)
+export const findPostById = async (id: string): Promise<Post | undefined> => {
+  const doc = await PostModel.findOne({ id }).select("-_id").lean()
+  return doc ? (doc as unknown as Post) : undefined
+}
 
 /** Update a post's title and content; returns undefined if not found */
-export const updatePost = (id: string, title: string, content: string): Post | undefined => {
-  const post = posts.find((p) => p.id === id)
-  if (!post) return undefined
-  post.title = title
-  post.content = content
-  return post
+export const updatePost = async (
+  id: string,
+  title: string,
+  content: string
+): Promise<Post | undefined> => {
+  const doc = await PostModel.findOneAndUpdate(
+    { id },
+    { title, content },
+    { new: true }
+  ).select("-_id").lean()
+  return doc ? (doc as unknown as Post) : undefined
 }
 
 /** Increment the like counter of a post by 1 */
-export const increasePostLikeCount = (id: string): void => {
-  const post = posts.find((p) => p.id === id)
-  if (post) post.likes += 1
+export const increasePostLikeCount = async (id: string): Promise<void> => {
+  await PostModel.updateOne({ id }, { $inc: { likes: 1 } })
 }

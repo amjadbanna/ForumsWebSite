@@ -1,4 +1,5 @@
 export const config = {
-  port: 3000,
-  jwtSecret: "forum-secret-key", // Use an env variable in production
-};
+  port: parseInt(process.env["PORT"] ?? "3000", 10),
+  mongoUri: process.env["MONGODB_URI"] ?? "",
+  jwtSecret: process.env["JWT_SECRET"] ?? "fallback-secret"
+}

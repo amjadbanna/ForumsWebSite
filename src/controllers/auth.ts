@@ -4,11 +4,10 @@ import { createToken } from "../middleware/jwt.js"
 import type { User } from "../domain/user.js"
 
 /** POST /auth/register — create a new user account */
-export const register = (req: Request, res: Response): void => {
+export const register = async (req: Request, res: Response): Promise<void> => {
   const { username, password } = req.body as { username: string; password: string }
 
-  // Check if the username is already taken
-  if (findUserByUsername(username)) {
+  if (await findUserByUsername(username)) {
     res.status(409).json({ message: "Username is already taken" })
     return
   }
@@ -16,21 +15,20 @@ export const register = (req: Request, res: Response): void => {
   const user: User = {
     id: Date.now().toString(),
     username,
-    password, // Hash with bcrypt in production
+    password,
     role: "user"
   }
 
-  const newUser = addUser(user)
+  const newUser = await addUser(user)
   const token = createToken({ id: newUser.id, username: newUser.username, role: newUser.role })
 
-  // Never return the password
   res.status(201).json({ token, user: { id: newUser.id, username: newUser.username, role: newUser.role } })
 }
 
 /** POST /auth/login — validate credentials and return a JWT */
-export const login = (req: Request, res: Response): void => {
+export const login = async (req: Request, res: Response): Promise<void> => {
   const { username, password } = req.body as { username: string; password: string }
-  const user = findUserByUsernameAndPassword(username, password)
+  const user = await findUserByUsernameAndPassword(username, password)
 
   if (!user) {
     res.status(401).json({ message: "Invalid username or password" })

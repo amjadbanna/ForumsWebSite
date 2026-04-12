@@ -4,19 +4,18 @@ import { increasePostLikeCount } from "../infrastructure/repositories/postReposi
 import type { Like } from "../domain/like.js"
 
 /** POST /posts/:postId/like — like a post (each user can only like once) */
-export const likePost = (req: Request, res: Response): void => {
+export const likePost = async (req: Request, res: Response): Promise<void> => {
   const postId = req.params.postId as string
-  const userId = req.user!.id // Set by authenticate()
+  const userId = req.user!.id
 
-  // Prevent the same user from liking the same post twice
-  if (hasUserLikedPost(postId, userId)) {
+  if (await hasUserLikedPost(postId, userId)) {
     res.status(400).json({ message: "You have already liked this post" })
     return
   }
 
   const like: Like = { postId, userId }
-  addLike(like)
-  increasePostLikeCount(postId)
+  await addLike(like)
+  await increasePostLikeCount(postId)
 
   res.json({ message: "Post liked" })
 }

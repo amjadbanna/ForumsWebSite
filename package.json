@@ -16,8 +16,10 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
     "dotenv-safe": "^9.1.0",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

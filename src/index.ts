@@ -1,72 +1,40 @@
+import "dotenv/config" // Load .env variables FIRST before anything else reads them
 import express from "express"
 import cors from "cors"
 import { config } from "./config/config.js"
+import { connectDatabase } from "./infrastructure/database.js"
 
-// Controllers
-import { register, login } from "./controllers/auth.js"
-import { createPost, getPosts, deletePost, editPost } from "./controllers/forum.js"
-import { addComment, getCommentsByPost, editComment, deleteComment } from "./controllers/comment.js"
-import { likePost } from "./controllers/like.js"
-import { getStats, getUserStats } from "./controllers/admin.js"
-
-// Middleware
-import { authenticate } from "./middleware/authenticate.js"
-import { requireRole } from "./middleware/requireRole.js"
+// Route files — each file groups related endpoints together
+import authRoutes from "./ports/rest/routes/auth.routes.js"
+import postsRoutes from "./ports/rest/routes/posts.routes.js"
+import adminRoutes from "./ports/rest/routes/admin.routes.js"
 
 const app = express()
-app.use(cors())           // Allow cross-origin requests
-app.use(express.json())   // Parse JSON request bodies
 
-// ── Health check ──────────────────────────────────────────────
+// Allow requests from other origins (needed for frontend apps)
+app.use(cors())
+
+// Parse incoming JSON request bodies
+app.use(express.json())
+
+// Health check — just confirms the server is alive
 app.get("/", (_req, res) => {
   res.send("Forum API is running")
 })
 
-// ── Auth routes (no login required) ──────────────────────────
-// POST /auth/register   { username, password }
-app.post("/auth/register", register)
+// Mount route groups
+app.use("/auth", authRoutes)   // /auth/register, /auth/login
+app.use("/posts", postsRoutes) // /posts, /posts/:id, /posts/:postId/comments, /posts/:postId/like
+app.use("/admin", adminRoutes) // /admin/stats, /admin/users
 
-// POST /auth/login      { username, password }  → { token, user }
-app.post("/auth/login", login)
-
-// ── Post routes ───────────────────────────────────────────────
-// GET  /posts — public
-app.get("/posts", getPosts)
-
-// POST /posts           { title, content }
-app.post("/posts", authenticate, createPost)
-
-// PUT  /posts/:id       { title, content } — owner, superuser, or admin
-app.put("/posts/:id", authenticate, editPost)
-
-// DELETE /posts/:id — owner, superuser, or admin
-app.delete("/posts/:id", authenticate, deletePost)
-
-// ── Comment routes ────────────────────────────────────────────
-// GET  /posts/:postId/comments — public
-app.get("/posts/:postId/comments", getCommentsByPost)
-
-// POST /posts/:postId/comments   { content }
-app.post("/posts/:postId/comments", authenticate, addComment)
-
-// PUT  /posts/:postId/comments/:commentId   { content }
-app.put("/posts/:postId/comments/:commentId", authenticate, editComment)
-
-// DELETE /posts/:postId/comments/:commentId
-app.delete("/posts/:postId/comments/:commentId", authenticate, deleteComment)
-
-// ── Like routes ───────────────────────────────────────────────
-// POST /posts/:postId/like
-app.post("/posts/:postId/like", authenticate, likePost)
-
-// ── Admin routes (admin and superuser only) ───────────────────
-// GET  /admin/stats — site-wide aggregate statistics
-app.get("/admin/stats", authenticate, requireRole("admin", "superuser"), getStats)
-
-// GET  /admin/users — per-user analytics
-app.get("/admin/users", authenticate, requireRole("admin", "superuser"), getUserStats)
-
-// ── Start server ──────────────────────────────────────────────
-app.listen(config.port, () => {
-  console.log(`Server running at http://localhost:${config.port}`)
-})
+// Connect to MongoDB first, then start the server
+connectDatabase()
+  .then(() => {
+    app.listen(config.port, () => {
+      console.log(`Server running at http://localhost:${config.port}`)
+    })
+  })
+  .catch((err: unknown) => {
+    console.error("Failed to connect to MongoDB:", err)
+    process.exit(1) // Crash hard so the problem is obvious
+  })
