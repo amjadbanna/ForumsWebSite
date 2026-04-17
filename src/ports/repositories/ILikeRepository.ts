@@ -1,13 +1,13 @@
-import type { Like } from "../../domain/like.js"
+import type { Like } from "../../domain/like.js";
 
 /** Output Port — contract the infrastructure layer must fulfil for like data operations */
 export interface ILikeRepository {
   /** Persist a new like and return it */
-  addLike(like: Like): Like
+  addLike(like: Like): Like;
 
   /** Return true if the user has already liked the post */
-  hasUserLikedPost(postId: string, userId: string): boolean
+  hasUserLikedPost(postId: string, userId: string): boolean;
 
   /** Return all likes for a given post */
-  getLikesByPostId(postId: string): Like[]
+  getLikesByPostId(postId: string): Like[];
 }
