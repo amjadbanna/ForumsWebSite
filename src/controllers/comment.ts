@@ -1,3 +1,7 @@
+// controllers/comment.ts — handles adding, reading, editing, and deleting comments on posts.
+// Only the comment's author (or an admin) can edit or delete it. Anyone who is
+// logged in can add a comment; anyone can read them.
+
 import type { Request, Response } from "express"
 import {
   addNewComment,

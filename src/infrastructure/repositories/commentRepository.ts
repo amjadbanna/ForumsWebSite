@@ -1,3 +1,7 @@
+// infrastructure/repositories/commentRepository.ts — all database operations for comments.
+// This is the only file in the app that talks directly to the CommentModel (MongoDB).
+// Controllers never touch Mongoose directly — they always go through these functions.
+
 import type { Comment } from "../../domain/comment.js"
 import { CommentModel } from "../models/CommentModel.js"
 

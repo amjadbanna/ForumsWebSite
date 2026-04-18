@@ -1,3 +1,8 @@
+// ports/repositories/IUserRepository.ts — the contract (interface) that the
+// user repository must follow. By defining this here, the rest of the app depends
+// on the contract, not on the actual MongoDB implementation. This makes it easy
+// to swap the database later without touching any other code.
+
 import type { User, UserStatus } from "../../domain/user.js"
 
 /** Output Port — contract the infrastructure layer must fulfil for user data operations */
@@ -13,9 +18,6 @@ export interface IUserRepository {
 
   /** Find a user by their id */
   findUserById(id: string): Promise<User | undefined>
-
-  /** Return every stored user */
-  getAllUsers(): Promise<User[]>
 
   /** Change a user's status (active / blocked / deleted) — soft delete lives here */
   updateUserStatus(id: string, status: UserStatus): Promise<User | undefined>

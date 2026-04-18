@@ -1,3 +1,7 @@
+// ports/repositories/IPostRepository.ts — the contract (interface) that the
+// post repository must follow. Defines every database operation available for
+// posts so the rest of the app never depends directly on MongoDB or Mongoose.
+
 import type { Post } from "../../domain/post.js"
 
 /** Output Port — contract the infrastructure layer must fulfil for post data operations */

@@ -1,3 +1,8 @@
+// infrastructure/models/UserModel.ts — tells Mongoose what a User document
+// looks like in MongoDB. This is the database-level schema: field types,
+// required fields, unique constraints, and default values. It is the only
+// place in the app that knows about MongoDB's document structure for users.
+
 import mongoose from "mongoose"
 
 /**

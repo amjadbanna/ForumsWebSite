@@ -1,3 +1,8 @@
+// seed.ts — a one-time setup script that creates the first admin user in the database.
+// Run it with: npm run seed
+// Without this, there is no way to access the admin-only routes because the
+// register endpoint always creates accounts with the "user" role.
+
 import "dotenv/config"
 import mongoose from "mongoose"
 import { config } from "./config/config.js"

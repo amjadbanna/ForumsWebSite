@@ -1,3 +1,7 @@
+// domain/post.ts — defines what a Post is in this application.
+// A post must always have a non-empty title and content — those rules live here
+// in the factory function so no other layer can accidentally save a blank post.
+
 export interface Post {
   id: string
   title: string

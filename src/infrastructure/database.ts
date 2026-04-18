@@ -1,3 +1,8 @@
+// infrastructure/database.ts — opens the connection to MongoDB Atlas.
+// Called once at startup in index.ts. If the connection fails, the server
+// refuses to start so you never end up with a running API that silently
+// can't read or write data.
+
 import mongoose from "mongoose"
 import { config } from "../config/config.js"
 

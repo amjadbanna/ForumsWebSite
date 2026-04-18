@@ -1,3 +1,8 @@
+// domain/user.ts — defines what a User is in this application.
+// This is the purest layer — no database, no HTTP, just the data shape and the
+// rules that must always be true (e.g. username can't be empty, password must
+// be at least 6 characters). If a User can't be created here, it can't exist anywhere.
+
 export type Role = "user" | "admin" | "superuser"
 
 /**

@@ -1,3 +1,9 @@
+// index.ts — the entry point of the entire application.
+// This is where everything gets wired together: Express is created, middleware
+// is applied, routes are mounted, and the server starts listening. Nothing runs
+// until the database connection succeeds, so if MongoDB is unreachable the
+// server won't start at all.
+
 import "dotenv/config" // Load .env variables FIRST before anything else reads them
 import express, { type Request, type Response, type NextFunction } from "express"
 import cors from "cors"

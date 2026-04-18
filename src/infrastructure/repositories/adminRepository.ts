@@ -1,3 +1,7 @@
+// infrastructure/repositories/adminRepository.ts — read-only analytics queries for admins.
+// Returns site-wide totals and per-user activity breakdowns. These are the only
+// queries that span multiple collections at once (users, posts, comments, likes).
+
 import type { SiteStats, UserAnalytic } from "../../ports/repositories/IAdminRepository.js"
 import { UserModel } from "../models/UserModel.js"
 import { PostModel } from "../models/PostModel.js"

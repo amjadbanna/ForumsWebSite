@@ -1,3 +1,7 @@
+// ports/repositories/ILikeRepository.ts — the contract (interface) that the
+// like repository must follow. Defines every database operation available for
+// likes so the rest of the app never depends directly on MongoDB or Mongoose.
+
 import type { Like } from "../../domain/like.js"
 
 /** Output Port — contract the infrastructure layer must fulfil for like data operations */
@@ -8,6 +12,4 @@ export interface ILikeRepository {
   /** Return true if the user has already liked the post */
   hasUserLikedPost(postId: string, userId: string): Promise<boolean>
 
-  /** Return all likes for a given post */
-  getLikesByPostId(postId: string): Promise<Like[]>
 }

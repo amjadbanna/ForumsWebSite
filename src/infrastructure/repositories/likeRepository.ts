@@ -1,3 +1,7 @@
+// infrastructure/repositories/likeRepository.ts — all database operations for likes.
+// This is the only file in the app that talks directly to the LikeModel (MongoDB).
+// Includes saving a like, checking for duplicates, and fetching all likes on a post.
+
 import type { Like } from "../../domain/like.js"
 import { LikeModel } from "../models/LikeModel.js"
 
@@ -16,8 +20,3 @@ export const hasUserLikedPost = async (
   return doc !== null
 }
 
-/** Return all likes for a given post */
-export const getLikesByPostId = async (postId: string): Promise<Like[]> => {
-  const docs = await LikeModel.find({ postId }).select("-_id").lean()
-  return docs as unknown as Like[]
-}

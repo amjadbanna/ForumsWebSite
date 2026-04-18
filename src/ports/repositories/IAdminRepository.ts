@@ -1,3 +1,7 @@
+// ports/repositories/IAdminRepository.ts — the contract (interface) for admin analytics.
+// Also defines the SiteStats and UserAnalytic types used across the admin feature.
+// Keeping them here means any file that needs these types imports from one place.
+
 /** Site-wide aggregate statistics */
 export interface SiteStats {
   totalUsers: number

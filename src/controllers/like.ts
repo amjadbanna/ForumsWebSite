@@ -1,3 +1,7 @@
+// controllers/like.ts — handles liking a post.
+// Each user can only like any given post once. It also verifies the post exists
+// before saving the like, so you can't like something that has been deleted.
+
 import type { Request, Response } from "express"
 import { addLike, hasUserLikedPost } from "../infrastructure/repositories/likeRepository.js"
 import { findPostById, increasePostLikeCount } from "../infrastructure/repositories/postRepository.js"

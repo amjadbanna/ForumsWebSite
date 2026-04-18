@@ -1,3 +1,8 @@
+// middleware/requireRole.ts — restricts a route to users with a specific role.
+// Used after authenticate.ts (which confirms who the user is), this middleware
+// confirms what they're allowed to do. For example, only admins and superusers
+// can reach the /admin routes.
+
 import type { Request, Response, NextFunction } from "express"
 import type { Role } from "../domain/user.js"
 

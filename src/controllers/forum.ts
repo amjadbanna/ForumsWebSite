@@ -1,3 +1,7 @@
+// controllers/forum.ts — handles creating, reading, editing, and deleting posts.
+// It checks that the user is the post owner (or an admin) before allowing edits
+// or deletes. Regular users can only touch their own posts.
+
 import type { Request, Response } from "express"
 import {
   addPost,

@@ -1,3 +1,8 @@
+// infrastructure/models/PostModel.ts — tells Mongoose what a Post document
+// looks like in MongoDB. Defines field types, required fields, and defaults
+// (likes starts at 0). It is the only place in the app that knows about
+// MongoDB's document structure for posts.
+
 import mongoose from "mongoose"
 
 /**

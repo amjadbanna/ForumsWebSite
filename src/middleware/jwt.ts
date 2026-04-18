@@ -1,3 +1,9 @@
+// middleware/jwt.ts — creates and verifies JSON Web Tokens (JWTs).
+// JWTs are how the API knows who is making a request without hitting the
+// database on every call. The token is signed with a secret key so it can't
+// be faked. This file uses a custom HMAC-SHA256 implementation instead of
+// an external library.
+
 import { createHmac } from "crypto"
 import { config } from "../config/config.js"
 

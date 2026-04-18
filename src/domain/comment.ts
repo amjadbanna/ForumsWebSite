@@ -1,3 +1,7 @@
+// domain/comment.ts — defines what a Comment is in this application.
+// Comments belong to a post and an author. The factory function enforces that
+// a comment can never be saved with empty content.
+
 export interface Comment {
   id: string
   postId: string

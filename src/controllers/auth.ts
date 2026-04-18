@@ -1,3 +1,8 @@
+// controllers/auth.ts — handles user registration and login.
+// It reads the HTTP request, validates the input, calls the repository to
+// check or save the user, then returns a JWT token the client uses for all
+// future requests that require authentication.
+
 import type { Request, Response } from "express"
 import { addUser, findUserByUsernameAndPassword, findUserByUsername } from "../infrastructure/repositories/userRepository.js"
 import { createToken } from "../middleware/jwt.js"

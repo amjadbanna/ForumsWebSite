@@ -1,3 +1,7 @@
+// domain/like.ts — defines what a Like is in this application.
+// A like is just a link between a post and a user. The factory function ensures
+// both IDs are always present before anything gets saved.
+
 export interface Like {
   postId: string
   userId: string

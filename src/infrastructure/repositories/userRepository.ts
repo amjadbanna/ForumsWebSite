@@ -1,3 +1,7 @@
+// infrastructure/repositories/userRepository.ts — all database operations for users.
+// This is the only file in the app that talks directly to the UserModel (MongoDB).
+// Everything else goes through these functions, keeping database logic in one place.
+
 import type { User, UserStatus } from "../../domain/user.js"
 import { UserModel } from "../models/UserModel.js"
 
@@ -25,12 +29,6 @@ export const findUserByUsername = async (
 ): Promise<User | undefined> => {
   const doc = await UserModel.findOne({ username }).select("-_id").lean()
   return doc ? (doc as unknown as User) : undefined
-}
-
-/** Return all users */
-export const getAllUsers = async (): Promise<User[]> => {
-  const docs = await UserModel.find().select("-_id").lean()
-  return docs as unknown as User[]
 }
 
 /** Find a single user by their id, or undefined if not found */

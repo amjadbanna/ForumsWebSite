@@ -1,3 +1,7 @@
+// ports/rest/routes/posts.routes.ts — defines all post, comment, and like endpoints.
+// Everything that starts with /posts lives here. Public routes (reading posts and
+// comments) don't need a token; write operations do. Mounted at /posts in index.ts.
+
 import { Router } from "express"
 import { createPost, getPosts, deletePost, editPost } from "../../../controllers/forum.js"
 import { addComment, getCommentsByPost, editComment, deleteComment } from "../../../controllers/comment.js"

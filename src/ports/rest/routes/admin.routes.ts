@@ -1,3 +1,7 @@
+// ports/rest/routes/admin.routes.ts — defines all admin-only endpoints.
+// Every route here is protected by both authenticate (valid token required) and
+// requireRole (admin or superuser only). Mounted at /admin in index.ts.
+
 import { Router } from "express"
 import { getStats, getUserStats, adminDeletePost, adminDeleteComment, setUserStatus } from "../../../controllers/admin.js"
 import { authenticate } from "../../../middleware/authenticate.js"

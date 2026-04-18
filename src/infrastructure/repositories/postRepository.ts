@@ -1,3 +1,7 @@
+// infrastructure/repositories/postRepository.ts — all database operations for posts.
+// This is the only file in the app that talks directly to the PostModel (MongoDB).
+// Includes finding, creating, updating, deleting, and incrementing like counts.
+
 import type { Post } from "../../domain/post.js"
 import { PostModel } from "../models/PostModel.js"
 

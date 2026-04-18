@@ -1,3 +1,8 @@
+// controllers/admin.ts — admin-only actions: view site stats, delete any post
+// or comment regardless of who wrote it, and change a user's account status
+// (block, delete, or reactivate). Only admins and superusers can reach these
+// endpoints — enforced by the requireRole middleware in admin.routes.ts.
+
 import type { Request, Response } from "express"
 import { getSiteStats, getUserAnalytics } from "../infrastructure/repositories/adminRepository.js"
 import { removePostById, findPostById } from "../infrastructure/repositories/postRepository.js"

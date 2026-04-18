@@ -1,3 +1,9 @@
+// middleware/authenticate.ts — protects routes that require a logged-in user.
+// It reads the Authorization header, verifies the JWT, and attaches the user's
+// info to the request so controllers know who is making the call. If the token
+// is missing or invalid, the request is rejected with a 401 before it ever
+// reaches the controller.
+
 import type { Request, Response, NextFunction } from "express"
 import { verifyToken, type JwtPayload } from "./jwt.js"
 
