@@ -19,8 +19,8 @@ export interface UserAnalytic {
 /** Output Port — contract the infrastructure layer must fulfil for admin/analytics operations */
 export interface IAdminRepository {
   /** Return aggregate counts across the whole site */
-  getSiteStats(): SiteStats
+  getSiteStats(): Promise<SiteStats>
 
   /** Return an activity summary for every user */
-  getUserAnalytics(): UserAnalytic[]
+  getUserAnalytics(): Promise<UserAnalytic[]>
 }

@@ -3,14 +3,14 @@ import type { Comment } from "../../domain/comment.js"
 /** Output Port — contract the infrastructure layer must fulfil for comment data operations */
 export interface ICommentRepository {
   /** Persist a new comment and return it */
-  addNewComment(comment: Comment): Comment
+  addNewComment(comment: Comment): Promise<Comment>
 
   /** Return all comments for a given post */
-  getCommentsByPostId(postId: string): Comment[]
+  getCommentsByPostId(postId: string): Promise<Comment[]>
 
   /** Update a comment's content; returns undefined if not found */
-  updateComment(id: string, content: string): Comment | undefined
+  updateComment(id: string, content: string): Promise<Comment | undefined>
 
   /** Remove a comment by id (no-op if not found) */
-  removeCommentById(id: string): void
+  removeCommentById(id: string): Promise<void>
 }
