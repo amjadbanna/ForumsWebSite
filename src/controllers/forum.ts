@@ -6,21 +6,20 @@ import {
   updatePost,
   findPostById
 } from "../infrastructure/repositories/postRepository.js"
-import type { Post } from "../domain/post.js"
+import { createPost as buildPost } from "../domain/post.js"
 
 /** POST /posts — create a new forum post */
 export const createPost = async (req: Request, res: Response): Promise<void> => {
-  const { title, content } = req.body as { title: string; content: string }
-  const userId = req.user!.id
+  const { title, content } = req.body as { title?: string; content?: string }
 
-  const post: Post = {
-    id: Date.now().toString(),
-    title,
-    content,
-    authorId: userId,
-    likes: 0,
-    createdAt: new Date().toISOString()
+  // HTTP input check — both fields must be present in the request body
+  if (!title || !content) {
+    res.status(400).json({ message: "Title and content are required" })
+    return
   }
+
+  // buildPost (domain factory) enforces that title and content are not just whitespace
+  const post = buildPost(Date.now().toString(), title, content, req.user!.id)
 
   res.status(201).json(await addPost(post))
 }
@@ -64,7 +63,20 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
     return
   }
 
-  const { title, content } = req.body as { title: string; content: string }
-  const updated = await updatePost(post.id, title, content)
+  const { title, content } = req.body as { title?: string; content?: string }
+
+  // HTTP input check — can't update a post with empty fields
+  if (!title || !content) {
+    res.status(400).json({ message: "Title and content are required" })
+    return
+  }
+
+  // Extra guard — don't allow saving a post that is just blank spaces
+  if (!title.trim() || !content.trim()) {
+    res.status(400).json({ message: "Title and content cannot be blank" })
+    return
+  }
+
+  const updated = await updatePost(post.id, title.trim(), content.trim())
   res.json(updated)
 }

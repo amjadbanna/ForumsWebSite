@@ -1,5 +1,5 @@
 import "dotenv/config" // Load .env variables FIRST before anything else reads them
-import express from "express"
+import express, { type Request, type Response, type NextFunction } from "express"
 import cors from "cors"
 import { config } from "./config/config.js"
 import { connectDatabase } from "./infrastructure/database.js"
@@ -25,7 +25,19 @@ app.get("/", (_req, res) => {
 // Mount route groups
 app.use("/auth", authRoutes)   // /auth/register, /auth/login
 app.use("/posts", postsRoutes) // /posts, /posts/:id, /posts/:postId/comments, /posts/:postId/like
-app.use("/admin", adminRoutes) // /admin/stats, /admin/users
+app.use("/admin", adminRoutes) // /admin/stats, /admin/users, /admin/posts/:id, /admin/comments/:id
+
+/**
+ * Global error handler — catches any unhandled error thrown anywhere in the app.
+ * For example, if a domain factory function throws (e.g. "Password too short"),
+ * it ends up here and gets returned as a clean JSON error instead of crashing the server.
+ * Express recognises this as an error handler because it has 4 parameters (err, req, res, next).
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  const message = err instanceof Error ? err.message : "Something went wrong"
+  res.status(400).json({ message })
+})
 
 // Connect to MongoDB first, then start the server
 connectDatabase()

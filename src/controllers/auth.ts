@@ -1,23 +1,26 @@
 import type { Request, Response } from "express"
 import { addUser, findUserByUsernameAndPassword, findUserByUsername } from "../infrastructure/repositories/userRepository.js"
 import { createToken } from "../middleware/jwt.js"
-import type { User } from "../domain/user.js"
+import { createUser } from "../domain/user.js"
 
 /** POST /auth/register — create a new user account */
 export const register = async (req: Request, res: Response): Promise<void> => {
-  const { username, password } = req.body as { username: string; password: string }
+  const { username, password } = req.body as { username?: string; password?: string }
 
+  // HTTP input check — make sure the request actually included both fields
+  if (!username || !password) {
+    res.status(400).json({ message: "Username and password are required" })
+    return
+  }
+
+  // Check the username isn't already taken before creating anything
   if (await findUserByUsername(username)) {
     res.status(409).json({ message: "Username is already taken" })
     return
   }
 
-  const user: User = {
-    id: Date.now().toString(),
-    username,
-    password,
-    role: "user"
-  }
+  // createUser enforces domain rules (e.g. password min length) — throws if invalid
+  const user = createUser(Date.now().toString(), username, password)
 
   const newUser = await addUser(user)
   const token = createToken({ id: newUser.id, username: newUser.username, role: newUser.role })

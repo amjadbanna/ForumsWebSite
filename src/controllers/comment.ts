@@ -5,17 +5,20 @@ import {
   updateComment,
   removeCommentById
 } from "../infrastructure/repositories/commentRepository.js"
-import type { Comment } from "../domain/comment.js"
+import { createComment } from "../domain/comment.js"
 
 /** POST /posts/:postId/comments — add a comment to a post */
 export const addComment = async (req: Request, res: Response): Promise<void> => {
-  const comment: Comment = {
-    id: Date.now().toString(),
-    postId: req.params.postId as string,
-    authorId: req.user!.id,
-    content: (req.body as { content: string }).content,
-    createdAt: new Date().toISOString()
+  const { content } = req.body as { content?: string }
+
+  // HTTP input check — content field must exist in the request body
+  if (!content) {
+    res.status(400).json({ message: "Comment content is required" })
+    return
   }
+
+  // createComment (domain factory) also rejects blank/whitespace-only content
+  const comment = createComment(Date.now().toString(), req.params.postId, req.user!.id, content)
 
   res.status(201).json(await addNewComment(comment))
 }
@@ -41,7 +44,15 @@ export const editComment = async (req: Request, res: Response): Promise<void> =>
     return
   }
 
-  const updated = await updateComment(comment.id, (req.body as { content: string }).content)
+  const { content } = req.body as { content?: string }
+
+  // HTTP input check — can't update a comment to nothing
+  if (!content || !content.trim()) {
+    res.status(400).json({ message: "Comment content is required" })
+    return
+  }
+
+  const updated = await updateComment(comment.id, content.trim())
   res.json(updated)
 }
 
