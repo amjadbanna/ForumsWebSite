@@ -18,7 +18,7 @@ export const addComment = async (req: Request, res: Response): Promise<void> => 
   }
 
   // createComment (domain factory) also rejects blank/whitespace-only content
-  const comment = createComment(Date.now().toString(), req.params.postId, req.user!.id, content)
+  const comment = createComment(Date.now().toString(), req.params.postId as string, req.user!.id, content)
 
   res.status(201).json(await addNewComment(comment))
 }

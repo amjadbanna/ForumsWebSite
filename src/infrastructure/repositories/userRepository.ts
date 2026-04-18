@@ -1,4 +1,4 @@
-import type { User } from "../../domain/user.js"
+import type { User, UserStatus } from "../../domain/user.js"
 import { UserModel } from "../models/UserModel.js"
 
 /** Persist a new user and return it */
@@ -7,12 +7,15 @@ export const addUser = async (user: User): Promise<User> => {
   return user
 }
 
-/** Find a user by username and password */
+/**
+ * Find a user by username and password — but ONLY if their account is active.
+ * Blocked and deleted users are treated as if they don't exist during login.
+ */
 export const findUserByUsernameAndPassword = async (
   username: string,
   password: string
 ): Promise<User | undefined> => {
-  const doc = await UserModel.findOne({ username, password }).select("-_id").lean()
+  const doc = await UserModel.findOne({ username, password, status: "active" }).select("-_id").lean()
   return doc ? (doc as unknown as User) : undefined
 }
 
@@ -28,4 +31,26 @@ export const findUserByUsername = async (
 export const getAllUsers = async (): Promise<User[]> => {
   const docs = await UserModel.find().select("-_id").lean()
   return docs as unknown as User[]
+}
+
+/** Find a single user by their id, or undefined if not found */
+export const findUserById = async (id: string): Promise<User | undefined> => {
+  const doc = await UserModel.findOne({ id }).select("-_id").lean()
+  return doc ? (doc as unknown as User) : undefined
+}
+
+/**
+ * Change a user's status (active / blocked / deleted).
+ * This is how soft delete and account suspension work — we never remove the document.
+ */
+export const updateUserStatus = async (
+  id: string,
+  status: UserStatus
+): Promise<User | undefined> => {
+  const doc = await UserModel.findOneAndUpdate(
+    { id },
+    { status },
+    { new: true }
+  ).select("-_id").lean()
+  return doc ? (doc as unknown as User) : undefined
 }

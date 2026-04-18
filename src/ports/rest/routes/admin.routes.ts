@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { getStats, getUserStats, adminDeletePost, adminDeleteComment } from "../../../controllers/admin.js"
+import { getStats, getUserStats, adminDeletePost, adminDeleteComment, setUserStatus } from "../../../controllers/admin.js"
 import { authenticate } from "../../../middleware/authenticate.js"
 import { requireRole } from "../../../middleware/requireRole.js"
 
@@ -17,5 +17,8 @@ router.delete("/posts/:id", authenticate, requireRole("admin", "superuser"), adm
 
 // DELETE /admin/comments/:id — admin can delete any comment (not just their own)
 router.delete("/comments/:id", authenticate, requireRole("admin", "superuser"), adminDeleteComment)
+
+// PATCH /admin/users/:id/status — block, delete (soft), or reactivate a user account
+router.patch("/users/:id/status", authenticate, requireRole("admin", "superuser"), setUserStatus)
 
 export default router

@@ -1,10 +1,22 @@
 export type Role = "user" | "admin" | "superuser"
 
+/**
+ * The three possible states a user account can be in.
+ * We never delete users from the database — we just change their status.
+ * This is called "soft delete" — the data stays, the access doesn't.
+ *
+ * active  — normal account, can log in
+ * blocked — account is suspended, cannot log in (but can be reactivated)
+ * deleted — account is marked as gone, cannot log in (soft delete)
+ */
+export type UserStatus = "active" | "blocked" | "deleted"
+
 export interface User {
   id: string
   username: string
   password: string
   role: Role
+  status: UserStatus
 }
 
 /**
@@ -19,5 +31,14 @@ export function createUser(id: string, username: string, password: string, role:
   // Minimum password length — short passwords are too easy to guess
   if (!password || password.length < 6) throw new Error("Password must be at least 6 characters")
 
-  return { id, username: username.trim(), password, role }
+  // Every new user starts as active — only an admin can change this later
+  return { id, username: username.trim(), password, role, status: "active" }
+}
+
+/**
+ * Validates that a given string is a real UserStatus value.
+ * Used by the admin controller before saving a status change to the database.
+ */
+export function isValidStatus(value: string): value is UserStatus {
+  return value === "active" || value === "blocked" || value === "deleted"
 }

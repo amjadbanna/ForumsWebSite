@@ -27,7 +27,8 @@ async function seed() {
     id: Date.now().toString(),
     username: ADMIN_USERNAME,
     password: ADMIN_PASSWORD,
-    role: "admin"
+    role: "admin",
+    status: "active"  // admin accounts start active like everyone else
   })
 
   console.log(`Admin user "${ADMIN_USERNAME}" created successfully`)
