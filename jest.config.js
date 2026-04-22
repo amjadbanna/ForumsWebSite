@@ -27,7 +27,7 @@ export default {
   },
 
   // Where to find test files
-  testMatch: ["**/src/__tests__/**/*.test.ts"],
+  testMatch: ["**/src/jest_tests/**/*.test.ts"],
 
   // Fail the entire test run if any coverage type drops below 70%
   coverageThreshold: {
@@ -48,6 +48,6 @@ export default {
     "!src/infrastructure/database.ts",
     "!src/infrastructure/models/**",
     "!src/infrastructure/repositories/**",
-    "!src/__tests__/**"
+    "!src/jest_tests/**"
   ]
 }
